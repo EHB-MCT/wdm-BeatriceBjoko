@@ -68,3 +68,27 @@ Lazy Loading: gebruik React.lazy() en Suspense om componenten pas te laden wanne
 🔗 Bron: https://www.telerik.com/blogs/react-design-patterns-best-practices?utm_source=chatgpt.com
 
 🔗 Bron: https://www.geeksforgeeks.org/reactjs/react-design-patterns/
+
+## Node.js / Express – Conventies & Design Patterns
+
+-- Main entry point: `index.js`
+
+- Routes (future): stored in `/routes`
+- Controllers (future): stored in `/controllers`
+- Database (future): stored in `/models`
+
+## Docker – Conventies & Design Patterns
+
+- Each service has its own Dockerfile
+- Multi-container managed by `docker-compose.yml`
+
+## Git - Conventies & Design Patterns
+
+- Branch names follow `feature/...`, `fix/...`, or `hotfix/...`
+- Commit messages follow conventional commits
+
+# Data Flow
+
+- The frontend sends JSON via `fetch` to the backend (port 5000).
+- The backend processes data and interacts with MongoDB.
+- MongoDB stores JSON-like documents (questions, users, analytics).
