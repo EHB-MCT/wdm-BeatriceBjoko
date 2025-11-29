@@ -1,13 +1,20 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
 import answerRoutes from "./routes/answerRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 
-app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
+app.use(
+	cors({
+		origin: "http://localhost:8080",
+		credentials: true,
+	})
+);
 
 app.get("/", (req, res) => {
 	res.send("Backend is running and connected to MongoDB (if server started ok).");
