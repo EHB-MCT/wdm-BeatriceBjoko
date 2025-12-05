@@ -1,55 +1,65 @@
-.page-container {
-	max-width: 960px;
-	margin: 0 auto;
-	padding: 32px;
-}
-
-.page-title {
-	font-size: 24px;
-	font-weight: 600;
-	margin-bottom: 12px;
-}
-
-.page-subtitle {
-	font-size: 14px;
-	color: #8f98c0;
-	margin-bottom: 24px;
-}
-
-.section-divider {
-	margin: 24px 0;
-	border: none;
-	border-top: 1px solid rgba(151, 164, 209, 0.4);
-}
-
 .btn {
-	display: inline-block;
-	padding: 10px 16px;
-	border-radius: 999px;
+	width: 100%;
+	padding: 14px;
+	border-radius: 10px;
 	border: none;
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: 500;
 	cursor: pointer;
-	transition: transform 0.12s ease, box-shadow 0.12s ease;
+	transition: all 0.18s ease;
+	display: block;
+	text-align: center;
+	box-sizing: border-box;
 }
 
 .btn-primary {
-	background: linear-gradient(135deg, #0f6bff, #0fd9ff);
-	color: #ffffff;
-	box-shadow: 0 8px 18px rgba(15, 107, 255, 0.45);
+	background: linear-gradient(135deg, #0043a6, #0094ff);
+	color: #fff;
+	box-shadow: 0 6px 16px rgba(0, 123, 255, 0.35);
 }
 
 .btn-primary:hover {
+	background: linear-gradient(135deg, #00327a, #007be6);
+	box-shadow: 0 10px 22px rgba(0, 123, 255, 0.45);
 	transform: translateY(-1px);
-	box-shadow: 0 12px 24px rgba(15, 107, 255, 0.6);
 }
 
 .btn-secondary {
-	background: transparent;
-	color: #c7d0f0;
-	border: 1px solid rgba(151, 164, 209, 0.65);
+	background: rgba(255, 255, 255, 0.35);
+	border: 1px solid rgba(255, 255, 255, 0.8);
+	color: #00327a;
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	box-shadow: 0 6px 16px rgba(15, 23, 42, 0.15);
 }
 
 .btn-secondary:hover {
-	background: rgba(18, 24, 60, 0.95);
+	background: rgba(255, 255, 255, 0.55);
+	border-color: rgba(255, 255, 255, 0.95);
+	transform: translateY(-2px);
+	box-shadow: 0 10px 22px rgba(15, 23, 42, 0.22);
+}
+
+.input {
+	padding: 12px 12px;
+	font-size: 15px;
+	background: transparent;
+	border: none;
+	border-bottom: 2px solid #c9c9c9;
+	width: 100%;
+}
+
+.input:focus {
+	outline: none;
+	border-bottom-color: #0057ff;
+}
+
+.card {
+	border-radius: 20px;
+	background: rgba(255, 255, 255, 0.22);
+	backdrop-filter: blur(18px);
+	-webkit-backdrop-filter: blur(18px);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	padding: 40px 30px;
 }
