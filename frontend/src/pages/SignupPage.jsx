@@ -22,7 +22,11 @@ export default function SignupPage() {
 		try {
 			await signup(email, password);
 		} catch (err) {
-			setError(err.message || "Signup failed");
+			if (err.message === "User already exists") {
+				setError("This email is already in use. Please use another one.");
+			} else {
+				setError(err.message || "Signup failed");
+			}
 		}
 	}
 

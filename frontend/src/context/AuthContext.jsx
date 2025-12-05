@@ -53,7 +53,6 @@ export function AuthProvider({ children }) {
 	}, []);
 
 	const signup = useCallback(async (email, password) => {
-		setLoading(true);
 		try {
 			const data = await authService.signup(email, password);
 			setUser(data.user);
@@ -61,8 +60,6 @@ export function AuthProvider({ children }) {
 		} catch (error) {
 			console.error("Signup failed:", error);
 			throw error;
-		} finally {
-			setLoading(false);
 		}
 	}, []);
 

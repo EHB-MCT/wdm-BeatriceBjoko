@@ -25,11 +25,7 @@ async function request(path, options = {}) {
 	} catch {}
 
 	if (!response.ok) {
-		if (response.status === 401) {
-			throw new Error("Unauthorized");
-		}
-
-		const message = data?.message || "Request failed";
+		const message = data?.message || `Request failed (${response.status})`;
 		throw new Error(message);
 	}
 
