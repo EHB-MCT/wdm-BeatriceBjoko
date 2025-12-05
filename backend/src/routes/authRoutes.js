@@ -14,4 +14,13 @@ router.get("/me", protect, (req, res) => {
 	});
 });
 
+router.post("/logout", (req, res) => {
+	res.clearCookie("token", {
+		httpOnly: true,
+		secure: false,
+		sameSite: "lax",
+	});
+	return res.json({ message: "Logged out successfully" });
+});
+
 export default router;
