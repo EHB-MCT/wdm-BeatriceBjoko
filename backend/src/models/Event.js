@@ -7,13 +7,29 @@ const eventSchema = new mongoose.Schema(
 			ref: "User",
 			required: true,
 		},
+		sessionId: {
+			type: String,
+			required: true,
+			index: true,
+		},
 		type: {
 			type: String,
 			required: true,
+			enum: ["session_start", "session_end", "question_view", "question_answer", "hint_used", "question_skip", "tab_blur", "rage_click"],
 		},
-		metadata: {
-			type: Object,
-			default: {},
+		payload: {
+			questionId: String,
+			correct: Boolean,
+			responseTimeMs: Number,
+			hintUsed: Boolean,
+			retries: Number,
+			selectedAnswer: String,
+		},
+		meta: {
+			device: String,
+			language: String,
+			screenWidth: Number,
+			timezone: String,
 		},
 	},
 	{
@@ -21,6 +37,4 @@ const eventSchema = new mongoose.Schema(
 	}
 );
 
-const Event = mongoose.model("Event", eventSchema);
-
-export default Event;
+export default mongoose.model("Event", eventSchema);
