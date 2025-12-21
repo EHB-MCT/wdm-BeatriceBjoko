@@ -1,4 +1,5 @@
 import Event from "../models/Event.js";
+import { sessionService } from "../services/sessionService.js";
 
 export const createEvent = async (req, res, next) => {
 	try {

@@ -12,10 +12,10 @@ const eventSchema = new mongoose.Schema(
 			required: true,
 			index: true,
 		},
-		type: {
+type: {
 			type: String,
 			required: true,
-			enum: ["session_start", "session_end", "question_view", "question_answer", "hint_used", "question_skip", "tab_blur", "rage_click"],
+			enum: ["session_start", "session_end", "session_ping", "question_view", "question_answer", "hint_used", "question_skip", "tab_blur", "rage_click"],
 		},
 		payload: {
 			questionId: String,

@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { eventService } from "../services/eventService";
+import { sessionTracker } from "../services/sessionTracker";
 import { quizQuestions } from "../data/quizQuestions";
 import QuestionCard from "../components/quiz/QuestionCard";
+
+const SESSION_PING_INTERVAL_MS = 10_000;
 
 export default function QuizPage() {
 	const { user, logout } = useAuth();
@@ -18,6 +21,9 @@ export default function QuizPage() {
 	useEffect(() => {
 		sessionStartTimeRef.current = performance.now();
 
+		// Recover any abandoned sessions from previous visit
+		sessionTracker.recoverAbandonedSessions();
+
 		eventService.sendEvent({
 			type: "session_start",
 			sessionId: sessionIdRef.current,
@@ -25,7 +31,19 @@ export default function QuizPage() {
 		});
 	}, []);
 
-	// SESSION END (quiz completed)
+	// SESSION HEARTBEAT
+	useEffect(() => {
+		const interval = setInterval(() => {
+			eventService.sendEvent({
+				type: "session_ping",
+				sessionId: sessionIdRef.current,
+			});
+		}, SESSION_PING_INTERVAL_MS);
+
+		return () => clearInterval(interval);
+	}, []);
+
+	// SESSION END (QUIZ COMPLETED)
 	useEffect(() => {
 		if (!currentQuestion) {
 			const durationMs = Math.round(performance.now() - sessionStartTimeRef.current);
@@ -41,28 +59,38 @@ export default function QuizPage() {
 		}
 	}, [currentQuestion]);
 
-	// SESSION END (tab close / refresh)
+	// UNLOAD HANDLING
 	useEffect(() => {
-		function handleBeforeUnload() {
+		const handleUnload = () => {
 			const durationMs = Math.round(performance.now() - sessionStartTimeRef.current);
+			
+			// Store abandoned session as backup
+			sessionTracker.storeAbandonedSession(sessionIdRef.current, durationMs);
 
-			navigator.sendBeacon(
-				"http://localhost:5000/api/events",
-				JSON.stringify({
-					type: "session_end",
+			// Try sendBeacon as best effort
+			if (navigator.sendBeacon) {
+				const event = sessionTracker.storeAbandonedSession(sessionIdRef.current, durationMs);
+				const blob = new Blob([JSON.stringify(event)], { type: "application/json" });
+				navigator.sendBeacon("/api/events", blob);
+			}
+		};
+
+		const handleVisibilityChange = () => {
+			if (document.visibilityState === "hidden") {
+				eventService.sendEvent({
+					type: "tab_blur",
 					sessionId: sessionIdRef.current,
-					payload: {
-						durationMs,
-						completed: false,
-					},
-				})
-			);
-		}
+					payload: { timestamp: Date.now() },
+				});
+			}
+		};
 
-		window.addEventListener("beforeunload", handleBeforeUnload);
+		window.addEventListener("beforeunload", handleUnload);
+		window.addEventListener("visibilitychange", handleVisibilityChange);
 
 		return () => {
-			window.removeEventListener("beforeunload", handleBeforeUnload);
+			window.removeEventListener("beforeunload", handleUnload);
+			window.removeEventListener("visibilitychange", handleVisibilityChange);
 		};
 	}, []);
 
