@@ -19,6 +19,7 @@ const eventSchema = new mongoose.Schema(
 		},
 		payload: {
 			questionId: String,
+			answerId: String,
 			correct: Boolean,
 			responseTimeMs: Number,
 			hintUsed: Boolean,
