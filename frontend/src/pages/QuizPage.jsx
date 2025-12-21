@@ -1,50 +1,39 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { eventService } from "../services/eventService";
-import "./QuizPage.css";
-
-/**
- * Generates a unique session identifier.
- * Uses the browser crypto API when available, with a safe fallback.
- */
-function createSessionId() {
-	if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-		return crypto.randomUUID();
-	}
-	return `session_${Date.now()}_${Math.random().toString(16).slice(2)}`;
-}
+import { quizQuestions } from "../data/quizQuestions";
+import QuestionCard from "../components/quiz/QuestionCard";
 
 export default function QuizPage() {
 	const { user, logout } = useAuth();
 
-	const sessionId = useMemo(() => createSessionId(), []);
+	const sessionIdRef = useRef(crypto.randomUUID());
+	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-	const questionStartRef = useRef(null);
+	const currentQuestion = quizQuestions[currentQuestionIndex];
 
 	useEffect(() => {
-		async function startSession() {
-			try {
-				await eventService.trackEvent("session_start", {
-					sessionId,
-				});
-				console.log("session_start event sent");
-			} catch (error) {
-				console.error("Failed to send session_start event:", error);
-			}
-		}
+		eventService.sendEvent({
+			type: "session_start",
+			sessionId: sessionIdRef.current,
+			meta: eventService.getDefaultMeta(),
+		});
+	}, []);
 
-		startSession();
-	}, [sessionId]);
+	function handleAnswer(answer) {
+		setCurrentQuestionIndex((prev) => prev + 1);
+	}
 
 	return (
 		<div className="page-container">
-			<h1 className="page-title">Quiz Page</h1>
-
+			<h1 className="page-title">Quiz</h1>
 			<p className="page-subtitle">Welkom, {user?.email}</p>
+
+			{currentQuestion ? <QuestionCard question={currentQuestion} sessionId={sessionIdRef.current} onAnswer={handleAnswer} /> : <p>Quiz voltooid 🎉</p>}
 
 			<hr className="section-divider" />
 
-			<button className="btn btn-secondary" onClick={logout}>
+			<button className="btn btn-secondary" onClick={logout} type="button">
 				Log out
 			</button>
 		</div>
