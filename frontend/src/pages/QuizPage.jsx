@@ -32,7 +32,7 @@ export default function QuizPage() {
 	}, []);
 
 	/**
-	 * SESSION END — quiz completed
+	 * SESSION END quiz completed
 	 */
 	useEffect(() => {
 		if (!currentQuestion && sessionStartTimeRef.current !== null) {
