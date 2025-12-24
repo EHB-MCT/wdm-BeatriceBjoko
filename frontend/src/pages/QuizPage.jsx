@@ -49,6 +49,27 @@ export default function QuizPage() {
 		}
 	}, [currentQuestion]);
 
+	/**
+	 * LOGOUT → quiz verlaten
+	 */
+	function handleLogout() {
+		if (currentQuestion) {
+			const durationMs = Math.round(performance.now() - sessionStartTimeRef.current);
+
+			eventService.sendEvent({
+				type: "session_end",
+				sessionId: sessionIdRef.current,
+				payload: {
+					durationMs,
+					completed: false,
+					reason: "logout",
+				},
+			});
+		}
+
+		logout();
+	}
+
 	function handleAnswer() {
 		setCurrentQuestionIndex((prev) => prev + 1);
 	}
@@ -62,7 +83,7 @@ export default function QuizPage() {
 
 			<hr className="section-divider" />
 
-			<button className="btn btn-secondary" onClick={logout} type="button">
+			<button className="btn btn-secondary" onClick={handleLogout} type="button">
 				Log out
 			</button>
 		</div>

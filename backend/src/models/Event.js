@@ -24,6 +24,7 @@ const eventSchema = new mongoose.Schema(
 			responseTimeMs: Number,
 			durationMs: Number,
 			completed: Boolean,
+			reason: String,
 			hintUsed: Boolean,
 			retries: Number,
 			selectedAnswer: String,
