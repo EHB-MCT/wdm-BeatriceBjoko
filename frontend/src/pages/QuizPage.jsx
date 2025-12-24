@@ -7,27 +7,35 @@ import QuestionCard from "../components/quiz/QuestionCard";
 export default function QuizPage() {
 	const { user, logout } = useAuth();
 
+	// Stable session id for this quiz run
 	const sessionIdRef = useRef(crypto.randomUUID());
+
 	const sessionStartTimeRef = useRef(null);
 
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
 	const currentQuestion = quizQuestions[currentQuestionIndex];
 
-	// SESSION START
+	/**
+	 * SESSION START
+	 */
 	useEffect(() => {
-		sessionStartTimeRef.current = performance.now();
+		if (sessionStartTimeRef.current === null) {
+			sessionStartTimeRef.current = performance.now();
 
-		eventService.sendEvent({
-			type: "session_start",
-			sessionId: sessionIdRef.current,
-			meta: eventService.getDefaultMeta(),
-		});
+			eventService.sendEvent({
+				type: "session_start",
+				sessionId: sessionIdRef.current,
+				meta: eventService.getDefaultMeta(),
+			});
+		}
 	}, []);
 
-	// SESSION END (quiz completed)
+	/**
+	 * SESSION END — quiz completed
+	 */
 	useEffect(() => {
-		if (!currentQuestion) {
+		if (!currentQuestion && sessionStartTimeRef.current !== null) {
 			const durationMs = Math.round(performance.now() - sessionStartTimeRef.current);
 
 			eventService.sendEvent({
@@ -40,31 +48,6 @@ export default function QuizPage() {
 			});
 		}
 	}, [currentQuestion]);
-
-	// SESSION END (tab close / refresh)
-	useEffect(() => {
-		function handleBeforeUnload() {
-			const durationMs = Math.round(performance.now() - sessionStartTimeRef.current);
-
-			navigator.sendBeacon(
-				"http://localhost:5000/api/events",
-				JSON.stringify({
-					type: "session_end",
-					sessionId: sessionIdRef.current,
-					payload: {
-						durationMs,
-						completed: false,
-					},
-				})
-			);
-		}
-
-		window.addEventListener("beforeunload", handleBeforeUnload);
-
-		return () => {
-			window.removeEventListener("beforeunload", handleBeforeUnload);
-		};
-	}, []);
 
 	function handleAnswer() {
 		setCurrentQuestionIndex((prev) => prev + 1);
