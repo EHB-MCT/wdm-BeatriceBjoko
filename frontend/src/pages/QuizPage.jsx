@@ -3,18 +3,23 @@ import { useAuth } from "../context/AuthContext";
 import { eventService } from "../services/eventService";
 import { quizQuestions } from "../data/quizQuestions";
 import QuestionCard from "../components/quiz/QuestionCard";
+import QuizProgress from "../components/quiz/QuizProgress";
+import QuizResults from "../components/quiz/QuizResults";
 
 export default function QuizPage() {
 	const { user, logout } = useAuth();
 
 	// Stable session id for this quiz run
 	const sessionIdRef = useRef(crypto.randomUUID());
-
 	const sessionStartTimeRef = useRef(null);
 
+	// Quiz state
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+	const [score, setScore] = useState(0);
+	const [answers, setAnswers] = useState([]);
 
 	const currentQuestion = quizQuestions[currentQuestionIndex];
+	const isQuizCompleted = currentQuestionIndex >= quizQuestions.length;
 
 	/**
 	 * SESSION START
@@ -35,7 +40,7 @@ export default function QuizPage() {
 	 * SESSION END quiz completed
 	 */
 	useEffect(() => {
-		if (!currentQuestion && sessionStartTimeRef.current !== null) {
+		if (isQuizCompleted && sessionStartTimeRef.current !== null) {
 			const durationMs = Math.round(performance.now() - sessionStartTimeRef.current);
 
 			eventService.sendEvent({
@@ -44,16 +49,19 @@ export default function QuizPage() {
 				payload: {
 					durationMs,
 					completed: true,
+					score,
+					totalQuestions: quizQuestions.length,
+					correctAnswers: answers.filter((a) => a.correct).length,
 				},
 			});
 		}
-	}, [currentQuestion]);
+	}, [isQuizCompleted, score, answers]);
 
 	/**
-	 * LOGOUT → quiz verlaten
+	 * LOGOUT → quitting quiz
 	 */
 	function handleLogout() {
-		if (currentQuestion) {
+		if (!isQuizCompleted && sessionStartTimeRef.current !== null) {
 			const durationMs = Math.round(performance.now() - sessionStartTimeRef.current);
 
 			eventService.sendEvent({
@@ -63,6 +71,8 @@ export default function QuizPage() {
 					durationMs,
 					completed: false,
 					reason: "logout",
+					score,
+					questionsAnswered: currentQuestionIndex,
 				},
 			});
 		}
@@ -70,7 +80,23 @@ export default function QuizPage() {
 		logout();
 	}
 
-	function handleAnswer() {
+	/**
+	 * Handle answer submission
+	 */
+	function handleAnswer(answer) {
+		setAnswers((prev) => [
+			...prev,
+			{
+				questionId: currentQuestion.id,
+				answerId: answer.id,
+				correct: answer.correct,
+			},
+		]);
+
+		if (answer.correct) {
+			setScore((prev) => prev + 1);
+		}
+
 		setCurrentQuestionIndex((prev) => prev + 1);
 	}
 
@@ -79,7 +105,9 @@ export default function QuizPage() {
 			<h1 className="page-title">Quiz</h1>
 			<p className="page-subtitle">Welkom, {user?.email}</p>
 
-			{currentQuestion ? <QuestionCard question={currentQuestion} sessionId={sessionIdRef.current} onAnswer={handleAnswer} /> : <p>Quiz voltooid 🎉</p>}
+			{!isQuizCompleted && <QuizProgress currentQuestion={currentQuestionIndex + 1} totalQuestions={quizQuestions.length} />}
+
+			{currentQuestion ? <QuestionCard question={currentQuestion} sessionId={sessionIdRef.current} onAnswer={handleAnswer} /> : <QuizResults score={score} totalQuestions={quizQuestions.length} />}
 
 			<hr className="section-divider" />
 

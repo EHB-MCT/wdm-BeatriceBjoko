@@ -35,7 +35,7 @@ export default function QuestionCard({ question, sessionId, onAnswer }) {
 
 	return (
 		<div className="card">
-			<h2>Vraag</h2>
+			<h2>Question</h2>
 			<p>{question.text}</p>
 
 			{question.answers.map((answer) => (
