@@ -27,7 +27,6 @@ const eventSchema = new mongoose.Schema(
 			lastHoverAnswerId: String,
 			fromAnswerId: String,
 			toAnswerId: String,
-			timestamp: Number,
 			durationMs: Number,
 			completed: Boolean,
 			reason: String,
