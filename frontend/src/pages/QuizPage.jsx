@@ -5,6 +5,7 @@ import { quizQuestions } from "../data/quizQuestions";
 import QuestionCard from "../components/quiz/QuestionCard";
 import QuizProgress from "../components/quiz/QuizProgress";
 import QuizResults from "../components/quiz/QuizResults";
+import { useTabBlurTracking } from "../hooks/useTabBlurTracking";
 
 export default function QuizPage() {
 	const { user, logout } = useAuth();
@@ -20,6 +21,11 @@ export default function QuizPage() {
 
 	const currentQuestion = quizQuestions[currentQuestionIndex];
 	const isQuizCompleted = currentQuestionIndex >= quizQuestions.length;
+
+	useTabBlurTracking({
+		sessionId: sessionIdRef.current,
+		getCurrentQuestionId: () => quizQuestions[currentQuestionIndex]?.id,
+	});
 
 	/**
 	 * SESSION START
