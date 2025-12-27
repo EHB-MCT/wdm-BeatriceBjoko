@@ -139,3 +139,100 @@ export async function getTabBlurAfterHint(req, res, next) {
 		return next(err);
 	}
 }
+
+export async function getTabBlurVsAnswerError(req, res, next) {
+	try {
+		const DEFAULT_WINDOW_MS = 15_000;
+		const MAX_WINDOW_MS = 60_000;
+
+		const rawWindowMs = Number(req.query.windowMs);
+		const windowMs = Number.isFinite(rawWindowMs) && rawWindowMs > 0 ? Math.min(Math.floor(rawWindowMs), MAX_WINDOW_MS) : DEFAULT_WINDOW_MS;
+
+		const results = await Event.aggregate([
+			{
+				$match: { type: "question_answer" },
+			},
+			{
+				$project: {
+					sessionId: 1,
+					user: 1,
+					questionId: "$payload.questionId",
+					correct: "$payload.correct",
+					answerAt: "$createdAt",
+				},
+			},
+			{
+				$lookup: {
+					from: "events",
+					let: {
+						sessionId: "$sessionId",
+						questionId: "$questionId",
+						answerAt: "$answerAt",
+						windowMs: windowMs,
+					},
+					pipeline: [
+						{
+							$match: {
+								$expr: {
+									$and: [
+										{ $eq: ["$type", "tab_blur"] },
+										{ $eq: ["$sessionId", "$$sessionId"] },
+										{ $eq: ["$payload.questionId", "$$questionId"] },
+										{
+											$gt: ["$createdAt", { $subtract: ["$$answerAt", "$$windowMs"] }],
+										},
+										{ $lt: ["$createdAt", "$$answerAt"] },
+									],
+								},
+							},
+						},
+						{ $limit: 1 },
+						{ $project: { _id: 1 } },
+					],
+					as: "blurBeforeAnswer",
+				},
+			},
+			{
+				$addFields: {
+					hadBlurBeforeAnswer: {
+						$gt: [{ $size: "$blurBeforeAnswer" }, 0],
+					},
+				},
+			},
+			{
+				$group: {
+					_id: "$hadBlurBeforeAnswer",
+					totalAnswers: { $sum: 1 },
+					errors: {
+						$sum: { $cond: [{ $eq: ["$correct", false] }, 1, 0] },
+					},
+				},
+			},
+		]);
+
+		const withBlur = results.find((r) => r._id === true) || {
+			totalAnswers: 0,
+			errors: 0,
+		};
+		const withoutBlur = results.find((r) => r._id === false) || {
+			totalAnswers: 0,
+			errors: 0,
+		};
+
+		res.json({
+			windowMs,
+			withBlur: {
+				answers: withBlur.totalAnswers,
+				errors: withBlur.errors,
+				errorRate: withBlur.totalAnswers > 0 ? withBlur.errors / withBlur.totalAnswers : 0,
+			},
+			withoutBlur: {
+				answers: withoutBlur.totalAnswers,
+				errors: withoutBlur.errors,
+				errorRate: withoutBlur.totalAnswers > 0 ? withoutBlur.errors / withoutBlur.totalAnswers : 0,
+			},
+		});
+	} catch (err) {
+		next(err);
+	}
+}
