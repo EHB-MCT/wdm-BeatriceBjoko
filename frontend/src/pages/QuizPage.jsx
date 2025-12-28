@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { eventService } from "../services/eventService";
 import { quizQuestions } from "../data/quizQuestions";
@@ -119,9 +120,16 @@ export default function QuizPage() {
 
 			<hr className="section-divider" />
 
-			<button className="btn btn-secondary" onClick={handleLogout} type="button">
-				Log out
-			</button>
+			<div className="page-actions">
+				{user?.role === "admin" && (
+					<Link to="/admin" className="btn btn-primary admin-link">
+						Admin Panel
+					</Link>
+				)}
+				<button className="btn btn-secondary" onClick={handleLogout} type="button">
+					Log out
+				</button>
+			</div>
 		</div>
 	);
 }

@@ -23,3 +23,15 @@
 	border-top: 1px solid rgba(0, 0, 0, 0.08);
 	margin: 32px 0;
 }
+
+.page-actions {
+	display: flex;
+	gap: 16px;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.admin-link {
+	width: auto;
+	max-width: 200px;
+}

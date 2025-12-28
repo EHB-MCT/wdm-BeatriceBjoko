@@ -3,11 +3,12 @@ import { useAuth } from "../context/AuthContext";
 import LoginPage from "../pages/LoginPage";
 import QuizPage from "../pages/QuizPage";
 import SignupPage from "../pages/SignupPage";
+import AdminRoute from "../components/admin/AdminRoute";
+import AdminDashboard from "../pages/admin/AdminDashboard";
 
 export default function AppRoutes() {
 	const { isAuthenticated, loading } = useAuth();
 
-	// Wachten tot AuthContext /auth/me heeft gecheckt*/}
 	if (loading) {
 		return <p>Loading...</p>;
 	}
@@ -23,7 +24,15 @@ export default function AppRoutes() {
 
 				<Route path="/signup" element={isAuthenticated ? <Navigate to="/quiz" /> : <SignupPage />} />
 
-				{/* Fallback */}
+				<Route
+					path="/admin"
+					element={
+						<AdminRoute>
+							<AdminDashboard />
+						</AdminRoute>
+					}
+				/>
+
 				<Route path="*" element={<h2>404 Page not found</h2>} />
 			</Routes>
 		</BrowserRouter>
