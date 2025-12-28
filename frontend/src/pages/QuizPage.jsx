@@ -6,9 +6,11 @@ import QuestionCard from "../components/quiz/QuestionCard";
 import QuizProgress from "../components/quiz/QuizProgress";
 import QuizResults from "../components/quiz/QuizResults";
 import { useTabBlurTracking } from "../hooks/useTabBlurTracking";
+import { useSessionInfluence } from "../context/SessionInfluenceContext";
 
 export default function QuizPage() {
 	const { user, logout } = useAuth();
+	const { addStress } = useSessionInfluence();
 
 	// Stable session id for this quiz run
 	const sessionIdRef = useRef(crypto.randomUUID());
@@ -86,9 +88,6 @@ export default function QuizPage() {
 		logout();
 	}
 
-	/**
-	 * Handle answer submission
-	 */
 	function handleAnswer(answer) {
 		setAnswers((prev) => [
 			...prev,
@@ -101,6 +100,9 @@ export default function QuizPage() {
 
 		if (answer.correct) {
 			setScore((prev) => prev + 1);
+		} else {
+			// Influence: wrong answer increases stress
+			addStress(0.5);
 		}
 
 		setCurrentQuestionIndex((prev) => prev + 1);

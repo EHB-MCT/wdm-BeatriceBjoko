@@ -2,10 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { eventService } from "../../services/eventService";
 import { useAnswerHoverTracking } from "../../hooks/useAnswerHoverTracking";
 import { useHintTracking } from "../../hooks/useHintTracking";
+import { useSessionInfluence } from "../../context/SessionInfluenceContext";
+import { INFLUENCE_BUTTON_DELAY_MS } from "../../config/tracking";
 
 export default function QuestionCard({ question, sessionId, onAnswer }) {
 	const questionStartTimeRef = useRef(null);
 	const [isHintVisible, setIsHintVisible] = useState(false);
+	const [buttonsEnabled, setButtonsEnabled] = useState(true);
+
+	const { isInfluenced } = useSessionInfluence();
 
 	const { getAnswerHoverHandlers, getClickMeta } = useAnswerHoverTracking({
 		sessionId,
@@ -28,7 +33,19 @@ export default function QuestionCard({ question, sessionId, onAnswer }) {
 				questionId: question.id,
 			},
 		});
-	}, [question.id, sessionId]);
+
+		// If the session is influenced, disable buttons for 2 seconds
+		if (isInfluenced) {
+			setButtonsEnabled(false);
+			const timer = setTimeout(() => {
+				setButtonsEnabled(true);
+			}, INFLUENCE_BUTTON_DELAY_MS);
+
+			return () => clearTimeout(timer);
+		}
+
+		setButtonsEnabled(true);
+	}, [question.id, sessionId, isInfluenced]);
 
 	function handleAnswerClick(answer) {
 		const responseTimeMs = Math.round(performance.now() - questionStartTimeRef.current);
@@ -59,8 +76,10 @@ export default function QuestionCard({ question, sessionId, onAnswer }) {
 			<h2>Question</h2>
 			<p>{question.text}</p>
 
+			{isInfluenced && <p className="influence-text">Don't worry take a moment. Many people find this question challenging.</p>}
+
 			{question.answers.map((answer) => (
-				<button key={answer.id} type="button" className="btn btn-primary" {...getAnswerHoverHandlers(answer.id)} onClick={() => handleAnswerClick(answer)}>
+				<button key={answer.id} type="button" className={`btn btn-primary ${!buttonsEnabled ? "btn-disabled" : ""}`} disabled={!buttonsEnabled} {...getAnswerHoverHandlers(answer.id)} onClick={() => handleAnswerClick(answer)}>
 					{answer.text}
 				</button>
 			))}

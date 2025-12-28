@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { eventService } from "../services/eventService";
 import { BLUR_DEBOUNCE_MS } from "../config/tracking";
+import { useSessionInfluence } from "../context/SessionInfluenceContext";
 
 /**
  * Tracks when the user leaves the browser tab (loss of focus)
@@ -8,6 +9,7 @@ import { BLUR_DEBOUNCE_MS } from "../config/tracking";
  */
 export function useTabBlurTracking({ sessionId, getCurrentQuestionId }) {
 	const lastBlurAtRef = useRef(0);
+	const { addStress } = useSessionInfluence();
 
 	useEffect(() => {
 		function handleBlur() {
@@ -24,6 +26,9 @@ export function useTabBlurTracking({ sessionId, getCurrentQuestionId }) {
 					questionId: getCurrentQuestionId?.() || null,
 				},
 			});
+
+			// Influence: tab blur increases stress
+			addStress(1);
 		}
 
 		window.addEventListener("blur", handleBlur);
@@ -31,5 +36,5 @@ export function useTabBlurTracking({ sessionId, getCurrentQuestionId }) {
 		return () => {
 			window.removeEventListener("blur", handleBlur);
 		};
-	}, [sessionId, getCurrentQuestionId]);
+	}, [sessionId, getCurrentQuestionId, addStress]);
 }
