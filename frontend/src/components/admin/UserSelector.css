@@ -1,0 +1,130 @@
+.user-selector {
+	margin-bottom: 1.5rem;
+}
+
+.selector-label {
+	display: block;
+	color: #374151;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	font-size: 0.875rem;
+}
+
+.user-select-dropdown {
+	width: 100%;
+	padding: 0.75rem 1rem;
+	border: 1px solid #d1d5db;
+	border-radius: 0.375rem;
+	background-color: white;
+	color: #1f2937;
+	font-size: 0.875rem;
+	cursor: pointer;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.user-select-dropdown:focus {
+	outline: none;
+	border-color: #3b82f6;
+	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.user-select-dropdown:disabled {
+	background-color: #f3f4f6;
+	color: #9ca3af;
+	cursor: not-allowed;
+}
+
+.selected-user-info {
+	margin-top: 1rem;
+	padding: 1rem;
+	background-color: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 0.375rem;
+}
+
+.user-details {
+	font-size: 0.875rem;
+}
+
+.user-header {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.user-email {
+	font-weight: 600;
+	color: #1f2937;
+}
+
+.role-badge {
+	padding: 0.125rem 0.5rem;
+	border-radius: 0.25rem;
+	font-size: 0.75rem;
+	font-weight: 500;
+	text-transform: uppercase;
+}
+
+.admin-badge {
+	background-color: #dc2626;
+	color: white;
+}
+
+.user-badge {
+	background-color: #3b82f6;
+	color: white;
+}
+
+.user-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	color: #6b7280;
+}
+
+.user-date {
+	font-size: 0.75rem;
+}
+
+.loading,
+.error {
+	padding: 1rem;
+	border-radius: 0.375rem;
+	text-align: center;
+}
+
+.loading {
+	background-color: #f3f4f6;
+	color: #6b7280;
+}
+
+.loading-spinner {
+	font-size: 0.875rem;
+}
+
+.error {
+	background-color: #fef2f2;
+	border: 1px solid #fecaca;
+	color: #dc2626;
+}
+
+.error-message {
+	margin-bottom: 0.5rem;
+	font-size: 0.875rem;
+}
+
+.retry-button {
+	padding: 0.375rem 0.75rem;
+	background-color: #dc2626;
+	color: white;
+	border: none;
+	border-radius: 0.25rem;
+	font-size: 0.75rem;
+	cursor: pointer;
+	transition: background-color 0.15s ease-in-out;
+}
+
+.retry-button:hover {
+	background-color: #b91c1c;
+}

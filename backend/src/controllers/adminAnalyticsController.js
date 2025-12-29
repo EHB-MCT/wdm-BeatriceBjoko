@@ -1,13 +1,21 @@
 import Event from "../models/Event.js";
+import { ObjectId } from "mongodb";
 
 export const getTabBlurByQuestion = async (req, res, next) => {
 	try {
+		const { userId } = req.query;
+		const matchStage = {
+			type: "tab_blur",
+			"payload.questionId": { $ne: null },
+		};
+
+		if (userId) {
+			matchStage.user = new ObjectId(String(userId));
+		}
+
 		const results = await Event.aggregate([
 			{
-				$match: {
-					type: "tab_blur",
-					"payload.questionId": { $ne: null },
-				},
+				$match: matchStage,
 			},
 			{
 				$group: {
@@ -43,18 +51,24 @@ const MAX_WINDOW_MS = 5 * 60_000;
 
 export async function getTabBlurAfterHint(req, res, next) {
 	try {
-		const rawWindowMs = Number(req.query.windowMs);
+		const { userId, windowMs: rawWindowMs } = req.query;
 		const windowMs = Number.isFinite(rawWindowMs) && rawWindowMs > 0 ? Math.min(Math.floor(rawWindowMs), MAX_WINDOW_MS) : DEFAULT_WINDOW_MS;
+
+		const matchStage = {
+			type: "hint_used",
+			"payload.questionId": { $exists: true, $ne: null },
+		};
+
+		if (userId) {
+			matchStage.user = new ObjectId(String(userId));
+		}
 
 		// - Start from hint_used events
 		// - For each hint_used, lookup tab_blur in same sessionId + questionId in a time window after hint
 		// - Group by questionId and count
 		const items = await Event.aggregate([
 			{
-				$match: {
-					type: "hint_used",
-					"payload.questionId": { $exists: true, $ne: null },
-				},
+				$match: matchStage,
 			},
 			{
 				$project: {
@@ -145,12 +159,18 @@ export async function getTabBlurVsAnswerError(req, res, next) {
 		const DEFAULT_WINDOW_MS = 15_000;
 		const MAX_WINDOW_MS = 60_000;
 
-		const rawWindowMs = Number(req.query.windowMs);
+		const { userId, windowMs: rawWindowMs } = req.query;
 		const windowMs = Number.isFinite(rawWindowMs) && rawWindowMs > 0 ? Math.min(Math.floor(rawWindowMs), MAX_WINDOW_MS) : DEFAULT_WINDOW_MS;
+
+		const matchStage = { type: "question_answer" };
+
+		if (userId) {
+			matchStage.user = new ObjectId(String(userId));
+		}
 
 		const results = await Event.aggregate([
 			{
-				$match: { type: "question_answer" },
+				$match: matchStage,
 			},
 			{
 				$project: {

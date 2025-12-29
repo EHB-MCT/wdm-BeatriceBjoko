@@ -5,19 +5,32 @@
 }
 
 .analytics-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 2rem;
-	flex-wrap: wrap;
-	gap: 1rem;
+	margin-bottom: 1.5rem;
 }
 
 .analytics-header h1 {
 	color: #1e293b;
 	font-size: 2rem;
 	font-weight: 700;
-	margin: 0;
+	margin: 0 0 0.5rem 0;
+}
+
+.header-subtitle {
+	color: #64748b;
+	font-size: 1rem;
+	font-weight: 500;
+}
+
+.analytics-controls {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 2rem;
+	align-items: start;
+	margin-bottom: 2rem;
+	padding: 1.5rem;
+	background-color: #f8fafc;
+	border-radius: 0.5rem;
+	border: 1px solid #e2e8f0;
 }
 
 .time-window-selector {
@@ -174,4 +187,29 @@
 .custom-tooltip p:first-child {
 	font-weight: 600;
 	color: #1e293b;
+}
+
+@media (max-width: 768px) {
+	.admin-analytics {
+		padding: 1rem;
+	}
+	
+	.analytics-header h1 {
+		font-size: 1.5rem;
+	}
+	
+	.analytics-controls {
+		grid-template-columns: 1fr;
+		gap: 1rem;
+		padding: 1rem;
+	}
+	
+	.analytics-grid {
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+	
+	.insights-grid {
+		grid-template-columns: 1fr;
+	}
 }
