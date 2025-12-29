@@ -39,7 +39,7 @@ export const getTabBlurByQuestion = async (req, res, next) => {
 };
 
 const DEFAULT_WINDOW_MS = 30_000;
-const MAX_WINDOW_MS = 5 * 60_000; // 5 min safety cap
+const MAX_WINDOW_MS = 5 * 60_000;
 
 export async function getTabBlurAfterHint(req, res, next) {
 	try {

@@ -45,10 +45,6 @@ export const getUsers = async (req, res, next) => {
 	}
 };
 
-/**
- * GET /api/admin/users/:id
- * user details
- */
 export const getUserById = async (req, res, next) => {
 	try {
 		const { id } = req.params;

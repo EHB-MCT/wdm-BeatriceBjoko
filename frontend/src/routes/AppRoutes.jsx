@@ -5,6 +5,7 @@ import QuizPage from "../pages/QuizPage";
 import SignupPage from "../pages/SignupPage";
 import AdminRoute from "../components/admin/AdminRoute";
 import AdminDashboard from "../pages/admin/AdminDashboard";
+import AdminAnalytics from "../pages/admin/AdminAnalytics";
 
 export default function AppRoutes() {
 	const { isAuthenticated, loading } = useAuth();
@@ -29,6 +30,15 @@ export default function AppRoutes() {
 					element={
 						<AdminRoute>
 							<AdminDashboard />
+						</AdminRoute>
+					}
+				/>
+
+				<Route
+					path="/admin/analytics"
+					element={
+						<AdminRoute>
+							<AdminAnalytics />
 						</AdminRoute>
 					}
 				/>
