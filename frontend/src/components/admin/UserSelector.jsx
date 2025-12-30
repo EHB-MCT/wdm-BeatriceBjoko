@@ -84,6 +84,26 @@ const UserSelector = ({ selectedUserId, onUserSelect, disabled = false }) => {
 									<span className="user-date">Created: {formatDate(selectedUser.createdAt)}</span>
 									{selectedUser.lastLogin && <span className="user-date">Last Login: {formatDate(selectedUser.lastLogin)}</span>}
 								</div>
+								{selectedUser.deviceMetadata && (
+									<div className="device-metadata">
+										<div className="device-info">
+											<span className="device-label">Device:</span>
+											<span className="device-value">{selectedUser.deviceMetadata.device ? selectedUser.deviceMetadata.device.split(' ').slice(0, 2).join(' ') : 'Unknown'}</span>
+										</div>
+										<div className="device-info">
+											<span className="device-label">Language:</span>
+											<span className="device-value">{selectedUser.deviceMetadata.language || 'Unknown'}</span>
+										</div>
+										<div className="device-info">
+											<span className="device-label">Screen:</span>
+											<span className="device-value">{selectedUser.deviceMetadata.screenWidth ? `${selectedUser.deviceMetadata.screenWidth}px` : 'Unknown'}</span>
+										</div>
+										<div className="device-info">
+											<span className="device-label">Timezone:</span>
+											<span className="device-value">{selectedUser.deviceMetadata.timezone || 'Unknown'}</span>
+										</div>
+									</div>
+								)}
 							</div>
 						);
 					})()}

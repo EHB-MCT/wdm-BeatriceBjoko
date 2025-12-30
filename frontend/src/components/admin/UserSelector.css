@@ -87,6 +87,34 @@
 	font-size: 0.75rem;
 }
 
+.device-metadata {
+	margin-top: 0.75rem;
+	padding-top: 0.75rem;
+	border-top: 1px solid #e2e8f0;
+}
+
+.device-info {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 0.25rem;
+	font-size: 0.75rem;
+}
+
+.device-label {
+	color: #6b7280;
+	font-weight: 500;
+}
+
+.device-value {
+	color: #1f2937;
+	font-weight: 400;
+	max-width: 60%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 .loading,
 .error {
 	padding: 1rem;

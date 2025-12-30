@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema(
 		lastLogin: {
 			type: Date,
 		},
+		deviceMetadata: {
+			device: String,
+			language: String,
+			screenWidth: Number,
+			timezone: String,
+		},
 	},
 	{
 		timestamps: true,

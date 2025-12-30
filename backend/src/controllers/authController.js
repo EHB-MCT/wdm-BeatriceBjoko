@@ -3,7 +3,7 @@ import User from "../models/User.js";
 
 export const signup = async (req, res, next) => {
 	try {
-		const { email, password } = req.body;
+		const { email, password, deviceMetadata } = req.body;
 
 		if (!email || !password) {
 			return res.status(400).json({ message: "Email and password are required" });
@@ -18,6 +18,7 @@ export const signup = async (req, res, next) => {
 			email,
 			password,
 			role: "user",
+			deviceMetadata,
 		});
 
 		const safeUser = {
@@ -38,7 +39,7 @@ export const signup = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
 	try {
-		const { email, password } = req.body;
+		const { email, password, deviceMetadata } = req.body;
 
 		if (!email || !password) {
 			return res.status(400).json({ message: "Email and password are required" });
@@ -77,6 +78,9 @@ export const login = async (req, res, next) => {
 		});
 
 		user.lastLogin = new Date();
+		if (deviceMetadata) {
+			user.deviceMetadata = deviceMetadata;
+		}
 		await user.save();
 
 		res.status(200).json({

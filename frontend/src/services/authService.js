@@ -1,12 +1,15 @@
 import { apiClient } from "./apiClient";
+import { eventService } from "./eventService";
 
 export const authService = {
 	signup(email, password) {
-		return apiClient.post("/auth/signup", { email, password });
+		const deviceMetadata = eventService.getDefaultMeta();
+		return apiClient.post("/auth/signup", { email, password, deviceMetadata });
 	},
 
 	login(email, password) {
-		return apiClient.post("/auth/login", { email, password });
+		const deviceMetadata = eventService.getDefaultMeta();
+		return apiClient.post("/auth/login", { email, password, deviceMetadata });
 	},
 
 	// uses the cookie (JWT) set by the backend

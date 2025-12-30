@@ -32,7 +32,7 @@ export const getUsers = async (req, res, next) => {
 			filter.email = { $regex: search.trim(), $options: "i" };
 		}
 
-		const [items, total] = await Promise.all([User.find(filter).select("_id email role createdAt lastLogin").sort({ createdAt: -1 }).skip(skip).limit(limit), User.countDocuments(filter)]);
+		const [items, total] = await Promise.all([User.find(filter).select("_id email role createdAt lastLogin deviceMetadata").sort({ createdAt: -1 }).skip(skip).limit(limit), User.countDocuments(filter)]);
 
 		res.json({
 			page,
@@ -53,7 +53,7 @@ export const getUserById = async (req, res, next) => {
 			return res.status(400).json({ message: "Invalid user id" });
 		}
 
-		const user = await User.findById(id).select("_id email role createdAt lastLogin");
+		const user = await User.findById(id).select("_id email role createdAt lastLogin deviceMetadata");
 		if (!user) {
 			return res.status(404).json({ message: "User not found" });
 		}
