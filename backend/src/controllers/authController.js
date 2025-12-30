@@ -69,7 +69,6 @@ export const login = async (req, res, next) => {
 		});
 
 		// set up httpOnly cookie
-		// frontend can not read the cookie
 		res.cookie("token", token, {
 			httpOnly: true,
 			secure: false,
