@@ -15,7 +15,7 @@ export function useTabBlurTracking({ sessionId, getCurrentQuestionId }) {
 		function handleBlur() {
 			const now = Date.now();
 
-			// basic debounce to avoid spam (alt-tab spam, etc.)
+			/** basic debounce to avoid spam (alt-tab spam, etc.) */
 			if (now - lastBlurAtRef.current < BLUR_DEBOUNCE_MS) return;
 			lastBlurAtRef.current = now;
 
@@ -27,7 +27,6 @@ export function useTabBlurTracking({ sessionId, getCurrentQuestionId }) {
 				},
 			});
 
-			// Influence: tab blur increases stress
 			addStress(1);
 		}
 

@@ -13,14 +13,11 @@ export function useAnswerHoverTracking({ sessionId, questionId }) {
 
 	const activeHoverAnswerIdRef = useRef(null);
 
-	// Timestamp of the last hover intent (after delay)
 	const lastHoverIntentAtRef = useRef(null);
 
-	// Timestamp of the last raw mouse enter (immediate)
 	const lastEnterAtRef = useRef(null);
 
 	useEffect(() => {
-		// Cleanup timer on unmount OR when question changes
 		return () => {
 			if (hoverTimerRef.current) {
 				clearTimeout(hoverTimerRef.current);
@@ -41,7 +38,6 @@ export function useAnswerHoverTracking({ sessionId, questionId }) {
 
 	const trackHoverIntent = useCallback(
 		({ answerId, enterAt }) => {
-			// if we already have an active hover on another answer → switch
 			const prev = activeHoverAnswerIdRef.current;
 
 			activeHoverAnswerIdRef.current = answerId;
@@ -79,7 +75,6 @@ export function useAnswerHoverTracking({ sessionId, questionId }) {
 			const enterAt = performance.now();
 			lastEnterAtRef.current = enterAt;
 
-			// After delay, confirm "intent" hover (not accidental pass)
 			hoverTimerRef.current = setTimeout(() => {
 				trackHoverIntent({ answerId, enterAt });
 			}, HOVER_INTENT_DELAY_MS);
@@ -91,7 +86,6 @@ export function useAnswerHoverTracking({ sessionId, questionId }) {
 		(answerId) => {
 			clearHoverTimer();
 
-			// Optional: track hover end only if this answer was the active hovered one
 			if (activeHoverAnswerIdRef.current === answerId) {
 				eventService.sendEvent({
 					type: "answer_hover_end",
@@ -113,9 +107,7 @@ export function useAnswerHoverTracking({ sessionId, questionId }) {
 		const activeHoverAnswerId = activeHoverAnswerIdRef.current;
 
 		return {
-			// how long since the last confirmed hover intent → click
 			timeSinceLastHoverIntentMs: lastHoverIntentAt ? Math.round(now - lastHoverIntentAt) : null,
-			// what answer the user last "hover-intended" before clicking
 			lastHoverAnswerId: activeHoverAnswerId || null,
 		};
 	}, []);

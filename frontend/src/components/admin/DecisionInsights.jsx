@@ -35,7 +35,6 @@ const DecisionInsights = ({ analyticsSummary, isUserSpecific, selectedUserId }) 
 		const messages = [];
 		const { cognitiveOverloadIndicators, mostDisengagingQuestion, hintEffectivenessRate } = analyticsSummary;
 
-		// Cognitive overload insights
 		if (cognitiveOverloadIndicators.includes("high_error_with_disengagement")) {
 			messages.push({
 				type: "warning",
@@ -60,7 +59,6 @@ const DecisionInsights = ({ analyticsSummary, isUserSpecific, selectedUserId }) 
 			});
 		}
 
-		// Most disengaging question insight
 		if (mostDisengagingQuestion && mostDisengagingQuestion.tabBlurCount > 5) {
 			messages.push({
 				type: "info",
@@ -69,7 +67,6 @@ const DecisionInsights = ({ analyticsSummary, isUserSpecific, selectedUserId }) 
 			});
 		}
 
-		// Hint effectiveness insight
 		if (hintEffectivenessRate < 0.5 && hintEffectivenessRate > 0) {
 			messages.push({
 				type: "suggestion",
@@ -78,7 +75,6 @@ const DecisionInsights = ({ analyticsSummary, isUserSpecific, selectedUserId }) 
 			});
 		}
 
-		// Positive engagement
 		if (analyticsSummary.engagementPattern === "high_engagement") {
 			messages.push({
 				type: "success",
@@ -142,7 +138,6 @@ const DecisionInsights = ({ analyticsSummary, isUserSpecific, selectedUserId }) 
 		<div className="decision-insights">
 			<h2>Decision Insights</h2>
 
-			{/* Engagement Pattern Summary */}
 			<div className="engagement-pattern-summary">
 				<div className="pattern-header">
 					<h3>Overall Pattern</h3>
@@ -167,7 +162,6 @@ const DecisionInsights = ({ analyticsSummary, isUserSpecific, selectedUserId }) 
 				</div>
 			</div>
 
-			{/* Actionable Insights */}
 			<div className="actionable-insights">
 				<h3>Interpretation & Recommendations</h3>
 				{insightMessages.length > 0 ? (
@@ -191,7 +185,6 @@ const DecisionInsights = ({ analyticsSummary, isUserSpecific, selectedUserId }) 
 				)}
 			</div>
 
-			{/* Decision Support */}
 			<div className="decision-support">
 				<h3>Decision Support</h3>
 				<div className="decision-grid">

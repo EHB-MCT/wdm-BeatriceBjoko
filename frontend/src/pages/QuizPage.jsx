@@ -13,11 +13,9 @@ export default function QuizPage() {
 	const { user, logout } = useAuth();
 	const { addStress } = useSessionInfluence();
 
-	// Stable session id for this quiz run
 	const sessionIdRef = useRef(crypto.randomUUID());
 	const sessionStartTimeRef = useRef(null);
 
-	// Quiz state
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [score, setScore] = useState(0);
 	const [answers, setAnswers] = useState([]);
@@ -102,7 +100,6 @@ export default function QuizPage() {
 		if (answer.correct) {
 			setScore((prev) => prev + 1);
 		} else {
-			// Influence: wrong answer increases stress
 			addStress(0.5);
 		}
 

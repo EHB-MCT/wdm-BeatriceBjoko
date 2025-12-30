@@ -12,7 +12,7 @@ export const authService = {
 		return apiClient.post("/auth/login", { email, password, deviceMetadata });
 	},
 
-	// uses the cookie (JWT) set by the backend
+	/**	uses the cookie (JWT) set by the backend */
 	getCurrentUser() {
 		return apiClient.get("/auth/me");
 	},

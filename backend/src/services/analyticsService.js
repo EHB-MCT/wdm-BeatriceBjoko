@@ -26,8 +26,8 @@ export class AnalyticsService {
 
 	/**
 	 * Get hint effectiveness analytics
-	 * @param {number} windowMs - Time window in milliseconds
-	 * @param {string|null} userId - Optional user ID to filter by
+	 * @param {number} windowMs
+	 * @param {string|null} userId
 	 * @returns {Promise<Object>} Hint effectiveness analytics data
 	 */
 	static async getTabBlurAfterHintAnalytics(windowMs = null, userId = null) {
@@ -48,8 +48,8 @@ export class AnalyticsService {
 
 	/**
 	 * Get correlation between tab blur and answer errors
-	 * @param {number} windowMs - Time window in milliseconds
-	 * @param {string|null} userId - Optional user ID to filter by
+	 * @param {number} windowMs
+	 * @param {string|null} userId
 	 * @returns {Promise<Object>} Correlation analytics data
 	 */
 	static async getTabBlurVsAnswerErrorAnalytics(windowMs = null, userId = null) {
@@ -70,7 +70,7 @@ export class AnalyticsService {
 
 	/**
 	 * Get hover hesitation analytics by question
-	 * @param {string|null} userId - Optional user ID to filter by
+	 * @param {string|null} userId
 	 * @returns {Promise<Object>} Hover hesitation analytics data
 	 */
 	static async getHoverHesitationByQuestionAnalytics(userId = null) {
@@ -88,7 +88,7 @@ export class AnalyticsService {
 
 	/**
 	 * Get hover indecision analytics by question
-	 * @param {string|null} userId - Optional user ID to filter by
+	 * @param {string|null} userId
 	 * @returns {Promise<Object>} Hover indecision analytics data
 	 */
 	static async getHoverIndecisionByQuestionAnalytics(userId = null) {
@@ -106,7 +106,7 @@ export class AnalyticsService {
 
 	/**
 	 * Get comprehensive analytics summary
-	 * @param {string|null} userId - Optional user ID to filter by
+	 * @param {string|null} userId
 	 * @returns {Promise<Object>} Comprehensive analytics summary
 	 */
 	static async getComprehensiveAnalyticsSummary(userId = null) {

@@ -57,18 +57,18 @@ export const login = async (req, res, next) => {
 			return res.status(401).json({ message: "Invalid credentials" });
 		}
 
-		// JWT payload
+		/** JWT payload */
 		const tokenPayload = {
 			id: user._id,
 			role: user.role,
 		};
 
-		// create JWT
+		/**create JWT */
 		const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
 			expiresIn: process.env.JWT_EXPIRES_IN,
 		});
 
-		// set up httpOnly cookie
+		/** set up httpOnly cookie */
 		res.cookie("token", token, {
 			httpOnly: true,
 			secure: false,

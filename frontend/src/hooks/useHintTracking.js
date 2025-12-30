@@ -14,7 +14,7 @@ export function useHintTracking({ sessionId, questionId }) {
 			},
 		});
 
-		// Influence: using a hint increases stress
+		/**Influence: using a hint increases stress */
 		addStress(1);
 	}, [sessionId, questionId, addStress]);
 

@@ -7,7 +7,9 @@ export function AuthProvider({ children }) {
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
 
-	// On first render: check if there is already a logged-in user (via cookie + /auth/me)
+	{
+		/* On first render: check if there is already a logged-in user (via cookie + /auth/me)*/
+	}
 	useEffect(() => {
 		let isMounted = true;
 
@@ -63,7 +65,9 @@ export function AuthProvider({ children }) {
 		}
 	}, []);
 
-	// cookie is deleted by backend, we clean the state
+	{
+		/* cookie is deleted by backend, we clean the state */
+	}
 	const logout = useCallback(async () => {
 		setLoading(true);
 		try {
@@ -76,7 +80,9 @@ export function AuthProvider({ children }) {
 		}
 	}, []);
 
-	// Make value stable so that Context do not unnecessarily re-render
+	{
+		/* Make value stable so that Context do not unnecessarily re-render */
+	}
 	const authValue = useMemo(
 		() => ({
 			user,

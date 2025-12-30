@@ -73,7 +73,7 @@ export function useAdminAnalytics() {
 		setSelectedTimeWindow(windowMs);
 	}, []);
 
-	// Computed values for decision insights
+	/** Computed values for decision insights */
 	const getAnalyticsSummary = useCallback(() => {
 		if (tabBlurData.length === 0) {
 			return {
@@ -93,10 +93,8 @@ export function useAdminAnalytics() {
 
 		const hintEffectivenessRate = hintBlurData.length > 0 ? hintBlurData.filter((item) => item.blurAfterHintRatio < 0.5).length / hintBlurData.length : 0;
 
-		// Cognitive overload indicators
 		const cognitiveOverloadIndicators = [];
 
-		// High tab blur + high error rate
 		if (correlationData.length === 2) {
 			const withBlurErrorRate = correlationData[0].errorRate;
 			const withoutBlurErrorRate = correlationData[1].errorRate;
@@ -106,19 +104,16 @@ export function useAdminAnalytics() {
 			}
 		}
 
-		// High blur after hint usage
 		const highBlurAfterHint = hintBlurData.filter((item) => item.blurAfterHintRatio > 0.7);
 		if (highBlurAfterHint.length > 0) {
 			cognitiveOverloadIndicators.push("hint_ineffectiveness");
 		}
 
-		// Consistently high tab blur across questions
 		const highBlurQuestions = tabBlurData.filter((item) => item.tabBlurCount > 5);
 		if (highBlurQuestions.length > tabBlurData.length * 0.5) {
 			cognitiveOverloadIndicators.push("persistent_disengagement");
 		}
 
-		// Engagement pattern classification
 		let engagementPattern = "normal";
 		if (averageBlurRate > 7) {
 			engagementPattern = "high_disengagement";

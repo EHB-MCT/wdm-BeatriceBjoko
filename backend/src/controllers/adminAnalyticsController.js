@@ -1,11 +1,5 @@
 import { AnalyticsService } from "../services/analyticsService.js";
 
-/**
- * Admin Analytics Controller - Thin HTTP layer
- * Handles HTTP requests/responses only
- * All business logic and database operations are delegated to service and repository layers
- */
-
 export const getTabBlurByQuestion = async (req, res, next) => {
 	try {
 		const { userId } = req.query;
@@ -56,10 +50,6 @@ export async function getHoverIndecisionByQuestion(req, res, next) {
 	}
 }
 
-/**
- * Get comprehensive analytics summary
- * Aggregates all analytics data in a single endpoint
- */
 export async function getComprehensiveAnalytics(req, res, next) {
 	try {
 		const { userId } = req.query;

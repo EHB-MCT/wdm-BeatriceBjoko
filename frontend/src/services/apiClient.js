@@ -3,7 +3,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000
 async function request(path, options = {}) {
 	const url = `${API_BASE_URL}${path}`;
 
-	// cookies (JWT token) are automatically included
 	const config = {
 		method: options.method || "GET",
 		headers: {

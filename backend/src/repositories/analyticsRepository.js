@@ -4,13 +4,12 @@ import { EVENT_TYPES, AGGREGATION_CONFIG } from "../config/analyticsThresholds.j
 
 /**
  * Analytics Repository - Handles all MongoDB operations for analytics
- * Pure data access layer without business logic
  */
 export class AnalyticsRepository {
 	/**
 	 * Get tab blur events grouped by question
-	 * @param {string|null} userId - Optional user ID to filter by
-	 * @returns {Promise<Array>} Array of tab blur analytics by question
+	 * @param {string|null} userId
+	 * @returns {Promise<Array>}
 	 */
 	static async getTabBlurByQuestion(userId = null) {
 		const matchStage = {
@@ -47,8 +46,8 @@ export class AnalyticsRepository {
 
 	/**
 	 * Get hint usage and subsequent tab blur events
-	 * @param {number} windowMs - Time window in milliseconds
-	 * @param {string|null} userId - Optional user ID to filter by
+	 * @param {number} windowMs
+	 * @param {string|null} userId
 	 * @returns {Promise<Array>} Array of hint effectiveness analytics
 	 */
 	static async getTabBlurAfterHint(windowMs, userId = null) {
@@ -142,9 +141,9 @@ export class AnalyticsRepository {
 
 	/**
 	 * Get correlation between tab blur and answer errors
-	 * @param {number} windowMs - Time window in milliseconds
-	 * @param {string|null} userId - Optional user ID to filter by
-	 * @returns {Promise<Array>} Array of correlation data
+	 * @param {number} windowMs
+	 * @param {string|null} userId
+	 * @returns {Promise<Array>}
 	 */
 	static async getTabBlurVsAnswerError(windowMs, userId = null) {
 		const matchStage = { type: EVENT_TYPES.QUESTION_ANSWER };
@@ -257,10 +256,7 @@ export class AnalyticsRepository {
 								$cond: {
 									if: { $eq: [{ $mod: ["$$count", 2] }, 0] },
 									then: {
-										$avg: [
-											{ $arrayElemAt: ["$$sortedDelays", { $subtract: [{ $divide: ["$$count", 2] }, 1] }] },
-											{ $arrayElemAt: ["$$sortedDelays", { $divide: ["$$count", 2] }] },
-										],
+										$avg: [{ $arrayElemAt: ["$$sortedDelays", { $subtract: [{ $divide: ["$$count", 2] }, 1] }] }, { $arrayElemAt: ["$$sortedDelays", { $divide: ["$$count", 2] }] }],
 									},
 									else: { $arrayElemAt: ["$$sortedDelays", { $floor: { $divide: ["$$count", 2] } }] },
 								},
@@ -289,8 +285,8 @@ export class AnalyticsRepository {
 
 	/**
 	 * Get hover indecision analytics by question
-	 * @param {string|null} userId - Optional user ID to filter by
-	 * @returns {Promise<Array>} Array of hover indecision data
+	 * @param {string|null} userId
+	 * @returns {Promise<Array>}
 	 */
 	static async getHoverIndecisionByQuestion(userId = null) {
 		const hoverSwitchMatch = {
@@ -310,10 +306,7 @@ export class AnalyticsRepository {
 			hoverIntentMatch.user = new ObjectId(String(userId));
 		}
 
-		const [switchResults, intentResults] = await Promise.all([
-			this._getHoverSwitchAggregation(hoverSwitchMatch),
-			this._getHoverIntentAggregation(hoverIntentMatch),
-		]);
+		const [switchResults, intentResults] = await Promise.all([this._getHoverSwitchAggregation(hoverSwitchMatch), this._getHoverIntentAggregation(hoverIntentMatch)]);
 
 		return this._combineHoverData(switchResults, intentResults);
 	}
@@ -403,9 +396,7 @@ export class AnalyticsRepository {
 				totalIntents: intentItem ? intentItem.totalIntents : 0,
 				uniqueSessions: switchItem.uniqueSessions,
 				avgSwitchesPerSession: switchItem.avgSwitchesPerSession,
-				indecisionRatio: intentItem && intentItem.totalIntents > 0 
-					? Math.round((switchItem.totalSwitches / intentItem.totalIntents) * 100) / 100 
-					: 0,
+				indecisionRatio: intentItem && intentItem.totalIntents > 0 ? Math.round((switchItem.totalSwitches / intentItem.totalIntents) * 100) / 100 : 0,
 			};
 		});
 

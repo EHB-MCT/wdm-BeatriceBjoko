@@ -34,7 +34,6 @@ export default function QuestionCard({ question, sessionId, onAnswer }) {
 			},
 		});
 
-		// If the session is influenced, disable buttons for 2 seconds
 		if (isInfluenced) {
 			setButtonsEnabled(false);
 			const timer = setTimeout(() => {
