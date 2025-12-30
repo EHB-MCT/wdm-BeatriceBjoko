@@ -21,4 +21,18 @@ export const analyticsService = {
 		
 		return apiClient.get(`/admin/analytics/tab-blur-vs-answer-error?${params}`);
 	},
+
+	getHoverHesitationByQuestion(userId = null) {
+		const url = userId 
+			? `/admin/analytics/hover-hesitation-by-question?userId=${userId}`
+			: "/admin/analytics/hover-hesitation-by-question";
+		return apiClient.get(url);
+	},
+
+	getHoverIndecisionByQuestion(userId = null) {
+		const url = userId 
+			? `/admin/analytics/hover-indecision-by-question?userId=${userId}`
+			: "/admin/analytics/hover-indecision-by-question";
+		return apiClient.get(url);
+	},
 };

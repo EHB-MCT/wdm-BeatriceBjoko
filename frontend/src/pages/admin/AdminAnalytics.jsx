@@ -4,6 +4,8 @@ import TabBlurByQuestionChart from "../../components/admin/charts/TabBlurByQuest
 import HintEffectivenessChart from "../../components/admin/charts/HintEffectivenessChart";
 import CorrelationChart from "../../components/admin/charts/CorrelationChart";
 import EngagementScatterChart from "../../components/admin/charts/EngagementScatterChart";
+import HoverHesitationChart from "../../components/admin/charts/HoverHesitationChart";
+import HoverIndecisionChart from "../../components/admin/charts/HoverIndecisionChart";
 import UserSelector from "../../components/admin/UserSelector";
 import DecisionInsights from "../../components/admin/DecisionInsights";
 
@@ -14,6 +16,8 @@ export default function AdminAnalytics() {
 		tabBlurData, 
 		hintBlurData, 
 		correlationData, 
+		hoverHesitationData,
+		hoverIndecisionData,
 		loading, 
 		error, 
 		selectedTimeWindow, 
@@ -81,6 +85,14 @@ export default function AdminAnalytics() {
 
 				<div className="analytics-card">
 					<EngagementScatterChart data={hintBlurData} />
+				</div>
+
+				<div className="analytics-card">
+					<HoverHesitationChart data={hoverHesitationData} />
+				</div>
+
+				<div className="analytics-card">
+					<HoverIndecisionChart data={hoverIndecisionData} />
 				</div>
 			</div>
 

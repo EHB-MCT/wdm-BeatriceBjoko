@@ -6,6 +6,8 @@ export function useAdminAnalytics() {
 	const [tabBlurData, setTabBlurData] = useState([]);
 	const [hintBlurData, setHintBlurData] = useState([]);
 	const [correlationData, setCorrelationData] = useState([]);
+	const [hoverHesitationData, setHoverHesitationData] = useState([]);
+	const [hoverIndecisionData, setHoverIndecisionData] = useState([]);
 
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -17,10 +19,12 @@ export function useAdminAnalytics() {
 			setLoading(true);
 			setError(null);
 
-			const [tabBlurResponse, hintBlurResponse, correlationResponse] = await Promise.all([
+			const [tabBlurResponse, hintBlurResponse, correlationResponse, hoverHesitationResponse, hoverIndecisionResponse] = await Promise.all([
 				analyticsService.getTabBlurByQuestion(selectedUserId),
 				analyticsService.getTabBlurAfterHint(selectedTimeWindow, selectedUserId),
 				analyticsService.getTabBlurVsAnswerError(15000, selectedUserId),
+				analyticsService.getHoverHesitationByQuestion(selectedUserId),
+				analyticsService.getHoverIndecisionByQuestion(selectedUserId),
 			]);
 
 			setTabBlurData(Array.isArray(tabBlurResponse?.items) ? tabBlurResponse.items : []);
@@ -45,6 +49,10 @@ export function useAdminAnalytics() {
 			} else {
 				setCorrelationData([]);
 			}
+
+			setHoverHesitationData(Array.isArray(hoverHesitationResponse?.items) ? hoverHesitationResponse.items : []);
+
+			setHoverIndecisionData(Array.isArray(hoverIndecisionResponse?.items) ? hoverIndecisionResponse.items : []);
 		} catch (err) {
 			console.error("Admin analytics fetch failed:", err);
 			setError("Failed to fetch analytics data");
@@ -135,6 +143,8 @@ export function useAdminAnalytics() {
 		tabBlurData,
 		hintBlurData,
 		correlationData,
+		hoverHesitationData,
+		hoverIndecisionData,
 		loading,
 		error,
 		selectedTimeWindow,

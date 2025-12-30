@@ -256,3 +256,201 @@ export async function getTabBlurVsAnswerError(req, res, next) {
 		next(err);
 	}
 }
+
+export async function getHoverHesitationByQuestion(req, res, next) {
+	try {
+		const { userId } = req.query;
+		
+		const matchStage = {
+			type: "answer_hover_intent",
+			"payload.questionId": { $exists: true, $ne: null },
+			"payload.intentDelayMs": { $exists: true, $gte: 0 },
+		};
+
+		if (userId) {
+			matchStage.user = new ObjectId(String(userId));
+		}
+
+		const items = await Event.aggregate([
+			{
+				$match: matchStage,
+			},
+			{
+				$group: {
+					_id: "$payload.questionId",
+					totalHoverIntents: { $sum: 1 },
+					avgIntentDelayMs: { $avg: "$payload.intentDelayMs" },
+					maxIntentDelayMs: { $max: "$payload.intentDelayMs" },
+					minIntentDelayMs: { $min: "$payload.intentDelayMs" },
+					uniqueUsers: { $addToSet: "$user" },
+					intentDelays: { $push: "$payload.intentDelayMs" },
+				},
+			},
+			{
+				$addFields: {
+					medianIntentDelayMs: {
+						$let: {
+							vars: {
+								sortedDelays: { $sortArray: { input: "$intentDelays", sortBy: 1 } },
+								count: { $size: "$intentDelays" },
+							},
+							in: {
+								$cond: {
+									if: { $eq: [{ $mod: ["$$count", 2] }, 0] },
+									then: {
+										$avg: [
+											{ $arrayElemAt: ["$$sortedDelays", { $subtract: [{ $divide: ["$$count", 2] }, 1] }] },
+											{ $arrayElemAt: ["$$sortedDelays", { $divide: ["$$count", 2] }] },
+										],
+									},
+									else: { $arrayElemAt: ["$$sortedDelays", { $floor: { $divide: ["$$count", 2] } }] },
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				$project: {
+					_id: 0,
+					questionId: "$_id",
+					totalHoverIntents: 1,
+					avgIntentDelayMs: { $round: ["$avgIntentDelayMs", 2] },
+					medianIntentDelayMs: { $round: ["$medianIntentDelayMs", 2] },
+					maxIntentDelayMs: 1,
+					minIntentDelayMs: 1,
+					uniqueUserCount: { $size: "$uniqueUsers" },
+				},
+			},
+			{ $sort: { avgIntentDelayMs: -1 } },
+		]);
+
+		return res.json({
+			totalQuestions: items.length,
+			items,
+		});
+	} catch (err) {
+		return next(err);
+	}
+}
+
+export async function getHoverIndecisionByQuestion(req, res, next) {
+	try {
+		const { userId } = req.query;
+		
+		const hoverSwitchMatch = {
+			type: "answer_hover_switch",
+			"payload.questionId": { $exists: true, $ne: null },
+			"payload.fromAnswerId": { $exists: true, $ne: null },
+			"payload.toAnswerId": { $exists: true, $ne: null },
+		};
+
+		const hoverIntentMatch = {
+			type: "answer_hover_intent",
+			"payload.questionId": { $exists: true, $ne: null },
+		};
+
+		if (userId) {
+			hoverSwitchMatch.user = new ObjectId(String(userId));
+			hoverIntentMatch.user = new ObjectId(String(userId));
+		}
+
+		const [switchResults, intentResults] = await Promise.all([
+			Event.aggregate([
+				{
+					$match: hoverSwitchMatch,
+				},
+				{
+					$group: {
+						_id: {
+							questionId: "$payload.questionId",
+							sessionId: "$sessionId",
+						},
+						switchCount: { $sum: 1 },
+						uniqueAnswers: { $addToSet: "$payload.fromAnswerId" },
+					},
+				},
+				{
+					$group: {
+						_id: "$_id.questionId",
+						totalSwitches: { $sum: "$switchCount" },
+						uniqueSessions: { $sum: 1 },
+						uniqueAnswerPairs: { $addToSet: "$uniqueAnswers" },
+					},
+				},
+				{
+					$project: {
+						_id: 0,
+						questionId: "$_id",
+						totalSwitches: 1,
+						uniqueSessions: 1,
+						avgSwitchesPerSession: { $round: [{ $divide: ["$totalSwitches", "$uniqueSessions"] }, 2] },
+					},
+				},
+			]),
+			Event.aggregate([
+				{
+					$match: hoverIntentMatch,
+				},
+				{
+					$group: {
+						_id: {
+							questionId: "$payload.questionId",
+							sessionId: "$sessionId",
+						},
+						intentCount: { $sum: 1 },
+					},
+				},
+				{
+					$group: {
+						_id: "$_id.questionId",
+						totalIntents: { $sum: "$intentCount" },
+						sessionsWithIntents: { $sum: 1 },
+					},
+				},
+				{
+					$project: {
+						_id: 0,
+						questionId: "$_id",
+						totalIntents: 1,
+						sessionsWithIntents: 1,
+					},
+				},
+			]),
+		]);
+
+		const combinedResults = switchResults.map((switchItem) => {
+			const intentItem = intentResults.find((i) => i.questionId === switchItem.questionId);
+			return {
+				questionId: switchItem.questionId,
+				totalSwitches: switchItem.totalSwitches,
+				totalIntents: intentItem ? intentItem.totalIntents : 0,
+				uniqueSessions: switchItem.uniqueSessions,
+				avgSwitchesPerSession: switchItem.avgSwitchesPerSession,
+				indecisionRatio: intentItem && intentItem.totalIntents > 0 
+					? Math.round((switchItem.totalSwitches / intentItem.totalIntents) * 100) / 100 
+					: 0,
+			};
+		});
+
+		const questionsWithOnlyIntents = intentResults
+			.filter((intentItem) => !combinedResults.find((r) => r.questionId === intentItem.questionId))
+			.map((intentItem) => ({
+				questionId: intentItem.questionId,
+				totalSwitches: 0,
+				totalIntents: intentItem.totalIntents,
+				uniqueSessions: intentItem.sessionsWithIntents,
+				avgSwitchesPerSession: 0,
+				indecisionRatio: 0,
+			}));
+
+		const allResults = [...combinedResults, ...questionsWithOnlyIntents].sort((a, b) => b.indecisionRatio - a.indecisionRatio);
+
+		return res.json({
+			totalQuestions: allResults.length,
+			items: allResults,
+		});
+	} catch (err) {
+		return next(err);
+	}
+}
