@@ -1,43 +1,17 @@
-.btn {
-	width: 100%;
-	padding: 14px;
-	border-radius: 10px;
-	border: none;
-	font-size: 16px;
-	font-weight: 500;
-	cursor: pointer;
-	transition: all 0.18s ease;
-	display: block;
-	text-align: center;
-	box-sizing: border-box;
+@import "../components/ui/Button/Button.css";
+@import "../components/ui/Card/Card.css";
+
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-disabled {
+	/* These classes are now handled by Button component */
+	/* Keeping for backward compatibility during migration */
 }
 
-.btn-primary {
-	background: linear-gradient(135deg, #0043a6, #0094ff);
-	color: #fff;
-	box-shadow: 0 6px 16px rgba(0, 123, 255, 0.35);
-}
-
-.btn-primary:hover {
-	background: linear-gradient(135deg, #00327a, #007be6);
-	box-shadow: 0 10px 22px rgba(0, 123, 255, 0.45);
-	transform: translateY(-1px);
-}
-
-.btn-secondary {
-	background: rgba(255, 255, 255, 0.35);
-	border: 1px solid rgba(255, 255, 255, 0.8);
-	color: #00327a;
-	backdrop-filter: blur(10px);
-	-webkit-backdrop-filter: blur(10px);
-	box-shadow: 0 6px 16px rgba(15, 23, 42, 0.15);
-}
-
-.btn-secondary:hover {
-	background: rgba(255, 255, 255, 0.55);
-	border-color: rgba(255, 255, 255, 0.95);
-	transform: translateY(-2px);
-	box-shadow: 0 10px 22px rgba(15, 23, 42, 0.22);
+.card {
+	/* This class is now handled by Card component */
+	/* Keeping for backward compatibility during migration */
 }
 
 .input {
@@ -52,20 +26,4 @@
 .input:focus {
 	outline: none;
 	border-bottom-color: #0057ff;
-}
-
-.card {
-	border-radius: 20px;
-	background: rgba(255, 255, 255, 0.22);
-	backdrop-filter: blur(18px);
-	-webkit-backdrop-filter: blur(18px);
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-	border: 1px solid rgba(255, 255, 255, 0.4);
-	padding: 40px 30px;
-}
-
-.btn-disabled {
-	opacity: 0.5;
-	cursor: wait;
-	transition: opacity 0.3s ease;
 }

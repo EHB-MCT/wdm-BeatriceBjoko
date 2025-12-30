@@ -7,6 +7,7 @@ import HoverHesitationChart from "../../components/admin/charts/HoverHesitationC
 import HoverIndecisionChart from "../../components/admin/charts/HoverIndecisionChart";
 import UserSelector from "../../components/admin/UserSelector";
 import DecisionInsights from "../../components/admin/DecisionInsights";
+import Card from "../../components/ui/Card/Card";
 import "./AdminAnalytics.css";
 
 export default function AdminAnalytics() {
@@ -42,29 +43,29 @@ export default function AdminAnalytics() {
 			</div>
 
 			<div className="analytics-grid">
-				<div className="analytics-card">
+				<Card variant="analytics">
 					<TabBlurByQuestionChart data={tabBlurData} />
-				</div>
+				</Card>
 
-				<div className="analytics-card">
+				<Card variant="analytics">
 					<HintEffectivenessChart data={hintBlurData} />
-				</div>
+				</Card>
 
-				<div className="analytics-card">
+				<Card variant="analytics">
 					<CorrelationChart data={correlationData} />
-				</div>
+				</Card>
 
-				<div className="analytics-card">
+				<Card variant="analytics">
 					<EngagementScatterChart data={hintBlurData} />
-				</div>
+				</Card>
 
-				<div className="analytics-card">
+				<Card variant="analytics">
 					<HoverHesitationChart data={hoverHesitationData} />
-				</div>
+				</Card>
 
-				<div className="analytics-card">
+				<Card variant="analytics">
 					<HoverIndecisionChart data={hoverIndecisionData} />
-				</div>
+				</Card>
 			</div>
 
 			<DecisionInsights analyticsSummary={analyticsSummary} isUserSpecific={isUserSpecific} selectedUserId={selectedUserId} />

@@ -42,11 +42,11 @@
 	margin-bottom: 22px;
 }
 
-.login-form .btn-primary {
+.login-form .ui-btn--primary {
 	margin-top: 20px;
 }
 
-.login-form .btn-secondary {
+.login-form .ui-btn--secondary {
 	margin-top: 14px;
 	text-decoration: none !important;
 }

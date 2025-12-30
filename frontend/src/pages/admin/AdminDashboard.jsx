@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import AdminNav from "../../components/admin/AdminNav";
+import Button from "../../components/ui/Button/Button";
+import Card from "../../components/ui/Card/Card";
 import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
@@ -17,33 +19,33 @@ export default function AdminDashboard() {
 
 			<div className="admin-content">
 				<div className="admin-cards">
-					<div className="admin-card">
+					<Card variant="admin" hoverable>
 						<h3>Analytics</h3>
 						<p>View user statistics and quiz performance</p>
-						<Link to="/admin/analytics" className="btn btn-primary">
+						<Link to="/admin/analytics" className="ui-btn ui-btn--primary">
 							View Analytics
 						</Link>
-					</div>
+					</Card>
 
-					<div className="admin-card">
+					<Card variant="admin" hoverable>
 						<h3>User Management</h3>
 						<p>Manage user accounts and permissions</p>
-						<button className="btn btn-secondary" disabled>
+						<Button variant="secondary" disabled>
 							Coming Soon
-						</button>
-					</div>
+						</Button>
+					</Card>
 
-					<div className="admin-card">
+					<Card variant="admin" hoverable>
 						<h3>Quiz Settings</h3>
 						<p>Configure quiz questions and settings</p>
-						<button className="btn btn-secondary" disabled>
+						<Button variant="secondary" disabled>
 							Coming Soon
-						</button>
-					</div>
+						</Button>
+					</Card>
 				</div>
 
 				<div className="admin-info">
-					<div className="info-card">
+					<Card variant="info">
 						<h4>Admin Information</h4>
 						<p>
 							<strong>User ID:</strong> {user?.id}
@@ -54,7 +56,7 @@ export default function AdminDashboard() {
 						<p>
 							<strong>Role:</strong> {user?.role}
 						</p>
-					</div>
+					</Card>
 				</div>
 			</div>
 		</div>

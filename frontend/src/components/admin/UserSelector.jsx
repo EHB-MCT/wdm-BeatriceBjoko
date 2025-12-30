@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { apiClient } from "../../services/apiClient";
+import Button from "../ui/Button/Button";
 import "./UserSelector.css";
 
 const UserSelector = ({ selectedUserId, onUserSelect, disabled = false }) => {
@@ -47,9 +48,9 @@ const UserSelector = ({ selectedUserId, onUserSelect, disabled = false }) => {
 		return (
 			<div className="user-selector error">
 				<div className="error-message">{error}</div>
-				<button onClick={fetchUsers} className="retry-button">
+				<Button onClick={fetchUsers} variant="primary" size="small">
 					Retry
-				</button>
+				</Button>
 			</div>
 		);
 	}

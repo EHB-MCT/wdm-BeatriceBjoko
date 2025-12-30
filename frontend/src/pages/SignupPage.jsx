@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import Button from "../components/ui/Button/Button";
 import "./SignupPage.css";
 
 export default function SignupPage() {
@@ -33,7 +34,7 @@ export default function SignupPage() {
 	return (
 		<div className="signup-page">
 			<div className="signup-form-wrapper">
-				<div className="signup-card card">
+				<div className="signup-card ui-card ui-card--auth signup-shimmer">
 					<h1 className="signup-title">Create Account</h1>
 
 					<form className="signup-form" onSubmit={handleSignup}>
@@ -54,11 +55,11 @@ export default function SignupPage() {
 
 						{error && <p className="signup-error">{error}</p>}
 
-						<button type="submit" className="btn btn-primary">
+						<Button type="submit" variant="primary">
 							Create Account
-						</button>
+						</Button>
 
-						<Link to="/login" className="btn btn-secondary">
+						<Link to="/login" className="ui-btn ui-btn--secondary">
 							Already have an account
 						</Link>
 					</form>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import Button from "../components/ui/Button/Button";
 import "./LoginPage.css";
 
 export default function LoginPage() {
@@ -23,8 +24,8 @@ export default function LoginPage() {
 		<div className="login-page">
 			<div className="login-image" />
 
-			<div className="login-form-wrapper">
-				<div className="login-card card">
+				<div className="login-form-wrapper">
+				<div className="login-card ui-card ui-card--auth">
 					<h1 className="login-title">Login</h1>
 
 					<form className="login-form" onSubmit={handleLogin}>
@@ -40,11 +41,11 @@ export default function LoginPage() {
 
 						{error && <p className="login-error">{error}</p>}
 
-						<button type="submit" className="btn btn-primary">
+						<Button type="submit" variant="primary">
 							Login
-						</button>
+						</Button>
 
-						<Link to="/signup" className="btn btn-secondary">
+						<Link to="/signup" className="ui-btn ui-btn--secondary">
 							Create new account
 						</Link>
 					</form>

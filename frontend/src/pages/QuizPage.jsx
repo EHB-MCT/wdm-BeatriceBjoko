@@ -8,6 +8,7 @@ import QuizProgress from "../components/quiz/QuizProgress";
 import QuizResults from "../components/quiz/QuizResults";
 import { useTabBlurTracking } from "../hooks/useTabBlurTracking";
 import { useSessionInfluence } from "../context/SessionInfluenceContext";
+import Button from "../components/ui/Button/Button";
 
 export default function QuizPage() {
 	const { user, logout } = useAuth();
@@ -119,13 +120,15 @@ export default function QuizPage() {
 
 			<div className="page-actions">
 				{user?.role === "admin" && (
-					<Link to="/admin" className="btn btn-primary admin-link">
-						Admin Panel
+					<Link to="/admin" className="admin-panel-link">
+						<Button variant="primary" size="small">
+							Admin Panel
+						</Button>
 					</Link>
 				)}
-				<button className="btn btn-secondary" onClick={handleLogout} type="button">
+				<Button variant="secondary" size="small" onClick={handleLogout} type="button" className="logout-button">
 					Log out
-				</button>
+				</Button>
 			</div>
 		</div>
 	);

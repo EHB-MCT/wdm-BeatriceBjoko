@@ -85,11 +85,11 @@
 	letter-spacing: 0.025em;
 }
 
-.signup-form .btn-primary {
+.signup-form .ui-btn--primary {
 	margin-top: 20px;
 }
 
-.signup-form .btn-secondary {
+.signup-form .ui-btn--secondary {
 	margin-top: 14px;
 	text-decoration: none !important;
 }
