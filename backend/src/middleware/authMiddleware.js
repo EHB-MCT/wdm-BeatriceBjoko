@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 
 export const protect = (req, res, next) => {
-	// Getting the token out of the httpOnly cookie
 	const token = req.cookies?.token;
 
 	if (!token) {
@@ -11,7 +10,6 @@ export const protect = (req, res, next) => {
 	try {
 		const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-		// User info on the request so that the controllers can use it
 		req.user = {
 			id: decoded.id,
 			role: decoded.role,

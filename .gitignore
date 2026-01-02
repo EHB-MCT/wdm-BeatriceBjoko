@@ -7,3 +7,9 @@ frontend/node_modules
 
 # Frontend build output
 frontend/dist
+
+# local cookie jars (opencode/curl)
+cookies.txt
+*.cookies.txt
+cookiejar.txt
+*.cookiejar.txt

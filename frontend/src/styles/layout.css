@@ -1,0 +1,29 @@
+@import "../components/ui/Button/Button.css";
+@import "../components/ui/Card/Card.css";
+
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-disabled {
+	/* These classes are now handled by Button component */
+	/* Keeping for backward compatibility during migration */
+}
+
+.card {
+	/* This class is now handled by Card component */
+	/* Keeping for backward compatibility during migration */
+}
+
+.input {
+	padding: 12px 12px;
+	font-size: 15px;
+	background: transparent;
+	border: none;
+	border-bottom: 2px solid #c9c9c9;
+	width: 100%;
+}
+
+.input:focus {
+	outline: none;
+	border-bottom-color: #0057ff;
+}

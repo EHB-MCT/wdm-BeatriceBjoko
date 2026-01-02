@@ -3,14 +3,13 @@ import User from "../models/User.js";
 
 export const signup = async (req, res, next) => {
 	try {
-		const { email, password, role } = req.body;
+		const { email, password, deviceMetadata } = req.body;
 
 		if (!email || !password) {
 			return res.status(400).json({ message: "Email and password are required" });
 		}
 
 		const existingUser = await User.findOne({ email });
-
 		if (existingUser) {
 			return res.status(409).json({ message: "User already exists" });
 		}
@@ -18,7 +17,8 @@ export const signup = async (req, res, next) => {
 		const newUser = await User.create({
 			email,
 			password,
-			role: role || "user",
+			role: "user",
+			deviceMetadata,
 		});
 
 		const safeUser = {
@@ -39,7 +39,7 @@ export const signup = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
 	try {
-		const { email, password } = req.body;
+		const { email, password, deviceMetadata } = req.body;
 
 		if (!email || !password) {
 			return res.status(400).json({ message: "Email and password are required" });
@@ -57,19 +57,18 @@ export const login = async (req, res, next) => {
 			return res.status(401).json({ message: "Invalid credentials" });
 		}
 
-		// JWT payload
+		/** JWT payload */
 		const tokenPayload = {
 			id: user._id,
 			role: user.role,
 		};
 
-		// create JWT
+		/**create JWT */
 		const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
 			expiresIn: process.env.JWT_EXPIRES_IN,
 		});
 
-		// set up httpOnly cookie
-		// frontend can not read the cookie
+		/** set up httpOnly cookie */
 		res.cookie("token", token, {
 			httpOnly: true,
 			secure: false,
@@ -78,6 +77,9 @@ export const login = async (req, res, next) => {
 		});
 
 		user.lastLogin = new Date();
+		if (deviceMetadata) {
+			user.deviceMetadata = deviceMetadata;
+		}
 		await user.save();
 
 		res.status(200).json({
