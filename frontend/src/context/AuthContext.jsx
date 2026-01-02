@@ -7,9 +7,7 @@ export function AuthProvider({ children }) {
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
 
-	{
-		/* On first render: check if there is already a logged-in user (via cookie + /auth/me)*/
-	}
+	/* On first render: check if there is already a logged-in user (via cookie + /auth/me) */
 	useEffect(() => {
 		let isMounted = true;
 
