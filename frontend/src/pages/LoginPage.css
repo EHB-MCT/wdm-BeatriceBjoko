@@ -1,0 +1,52 @@
+.login-page {
+	display: flex;
+	height: 100vh;
+	width: 100%;
+	font-family: "Inter", sans-serif;
+	background: #eef1f6;
+	overflow: hidden;
+}
+
+.login-image {
+	flex: 1;
+	background-image: url("/images/login.avif");
+	background-size: cover;
+	background-position: center;
+	filter: brightness(0.9);
+}
+
+.login-form-wrapper {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 40px;
+}
+
+.login-card {
+	max-width: 380px;
+	width: 100%;
+}
+
+.login-title {
+	text-align: center;
+	font-size: 28px;
+	font-weight: 600;
+	margin-bottom: 32px;
+	color: #0d1b3e;
+}
+
+.input-group {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 22px;
+}
+
+.login-form .ui-btn--primary {
+	margin-top: 20px;
+}
+
+.login-form .ui-btn--secondary {
+	margin-top: 14px;
+	text-decoration: none !important;
+}
